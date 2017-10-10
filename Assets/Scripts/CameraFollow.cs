@@ -2,24 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraFollow : MonoBehaviour {
+public class CameraFollow : MonoBehaviour
+{
 
-    public Transform target;
-    public float speed;
+    public Transform FollowTarget;
+    public Vector3 TargetOffset;
+    public float MoveSpeed = 2f;
     Camera cam;
+    private Transform _myTransform;
 
     // Use this for initialization
     void Start()
     {
-        cam = GetComponent<Camera>();
+        _myTransform = transform;
     }
 
-    void LateUpdate()
+    public void SetTarget(Transform aTransform)
     {
-        cam.orthographicSize = (Screen.height / 100f) / 4f;
-        if (target)
-        {
-            transform.position = Vector3.Lerp(transform.position, target.position, speed) + new Vector3(0, 100, 0);
-        }
+        FollowTarget = aTransform;
     }
+
+    private void LateUpdate()
+    {
+        if (FollowTarget != null)
+            _myTransform.position = Vector3.Lerp(_myTransform.position, FollowTarget.position + TargetOffset, MoveSpeed * Time.deltaTime);
+    }
+
 }
