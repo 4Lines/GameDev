@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 3dc3518e81068894a9c178f066234161
-timeCreated: 1507602520
+guid: 4d7b04f42be751d41a215a79272cfca9
+timeCreated: 1507602467
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
-    21300000: PC_UP_Movement_0
-    21300002: PC_UP_Movement_1
-    21300004: PC_UP_Movement_2
-    21300006: PC_UP_Movement_3
+    21300000: PC_Side_Movement_0
+    21300002: PC_Side_Movement_1
+    21300004: PC_Side_Movement_2
+    21300006: PC_Side_Movement_3
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -79,11 +79,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PC_UP_Movement_0
+      name: PC_Side_Movement_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 96
         width: 32
         height: 32
       alignment: 2
@@ -93,11 +93,11 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: PC_UP_Movement_1
+      name: PC_Side_Movement_1
       rect:
         serializedVersion: 2
-        x: 32
-        y: 0
+        x: 0
+        y: 64
         width: 32
         height: 32
       alignment: 2
@@ -107,11 +107,11 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: PC_UP_Movement_2
+      name: PC_Side_Movement_2
       rect:
         serializedVersion: 2
-        x: 64
-        y: 0
+        x: 0
+        y: 32
         width: 32
         height: 32
       alignment: 2
@@ -121,10 +121,10 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
     - serializedVersion: 2
-      name: PC_UP_Movement_3
+      name: PC_Side_Movement_3
       rect:
         serializedVersion: 2
-        x: 96
+        x: 0
         y: 0
         width: 32
         height: 32
