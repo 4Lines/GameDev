@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class BoltScript : MonoBehaviour {
 
-	private Rigidbody rb;
+	private Rigidbody2D rb;
 	public float speed;
+	public string targetTag;
 
 	// Use this for initialization
 	void Start () {
-		rb = GetComponent <Rigidbody> ();
-		rb.velocity = transform.forward * speed;
+		rb = GetComponent <Rigidbody2D> ();
+		rb.velocity = transform.up * speed;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		if (other.gameObject.CompareTag (targetTag)) {
+			Destroy (other.gameObject);
+			Destroy (gameObject);
+		}
 	}
 }
