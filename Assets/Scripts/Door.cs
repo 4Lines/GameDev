@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Door : MonoBehaviour {
 
+    private bool open = false;
     private GameObject theDoor;
     private BoxCollider2D boxCollider;
     private Animator animator;
@@ -17,11 +18,14 @@ public class Door : MonoBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.name == "Player")
+        if (!open)
         {
-            animator.enabled = true;
-            animator.Play("DoorAnim", 0, 0f);
-            Invoke("letThrough", 0.5f);
+            if (collision.collider.gameObject.name == "Player")
+            {
+                animator.enabled = true;
+                animator.Play("DoorAnim", 0, 0f);
+                Invoke("letThrough", 0.5f);
+            }
         }
             
     }
@@ -29,17 +33,26 @@ public class Door : MonoBehaviour {
     private void letThrough()
     {
         gameObject.layer = 0;
-        Invoke("closeDoor", 0.5f);
+        open = true;
     }
 
     private void closeDoor()
     {
         gameObject.layer = 8;
         animator.SetTrigger("DoorRev");
+        open = false;
     }
 
     // Update is called once per frame
     void Update () {
-		
+		if(open)
+        {
+            Transform playerPos = GameObject.FindGameObjectWithTag("Player").transform;
+            float xDir = playerPos.position.x - transform.position.x;
+            float yDir = playerPos.position.y - transform.position.y;
+            float dist = Mathf.Sqrt(Mathf.Pow(xDir, 2) + Mathf.Pow(yDir, 2));
+            if (dist > 2f)
+                closeDoor();
+        }
 	}
 }
