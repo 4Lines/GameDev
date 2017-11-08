@@ -16,6 +16,20 @@ public class MusicAndSounds : MonoBehaviour {
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
 	}
+
+    public void playSound(AudioClip theSound)
+    {
+        soundEffectSource.clip = theSound;
+        soundEffectSource.Play();
+    }
+
+    public void playSoundReverse(AudioClip theSound)
+    {
+        soundEffectSource.clip = theSound;
+        soundEffectSource.pitch = -1;
+        soundEffectSource.timeSamples = soundEffectSource.clip.samples - 1;
+        soundEffectSource.Play();
+    }
 	
 	// Update is called once per frame
 	void Update () {
