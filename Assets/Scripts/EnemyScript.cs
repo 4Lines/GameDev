@@ -11,9 +11,11 @@ public class EnemyScript : MonoBehaviour {
 	public float fireRate;
 	public float chaseRange;
 	public Transform[] patrolPoints;
+	public float hitPoints = 10f;
 
 	private float nextFire;
 	private Rigidbody2D rb;
+
 
 	Transform currentPatrolPoint;
 	int currentPatrolIndex;
@@ -25,48 +27,49 @@ public class EnemyScript : MonoBehaviour {
 		currentPatrolPoint = patrolPoints [currentPatrolIndex];
 	}
 
-	void Update() {
-
-		//Chase Player AI
+	void Update ()
+	{
 		float distanceToTarget = Vector3.Distance (transform.position, target.position);
 		if (distanceToTarget < chaseRange) {
-			if (Time.time > nextFire) {
-				nextFire = Time.time + fireRate;
-				Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
-			}
-
-			Vector3 targetDirection = target.position - transform.position;
-			float chaseAngle = Mathf.Atan2 (targetDirection.y, targetDirection.x) * Mathf.Rad2Deg - 90f;
-			Quaternion q2 = Quaternion.AngleAxis (chaseAngle, Vector3.forward);
-			transform.rotation = Quaternion.RotateTowards (transform.rotation, q2, 180);
-
-			transform.Translate (Vector3.up * Time.deltaTime * speed);
+			Chase ();
 		} else {
-			
-			//Enemy Patrolling AI
-			transform.Translate (Vector3.up * Time.deltaTime * speed);
-			if (Vector3.Distance (transform.position, currentPatrolPoint.position) < 0.1f) {
-				if (currentPatrolIndex + 1 < patrolPoints.Length) {
-					currentPatrolIndex++;
-				} else {
-					currentPatrolIndex = 0;
-				}
-				currentPatrolPoint = patrolPoints [currentPatrolIndex];
-			}
-			Vector3 patrolPointDirection = currentPatrolPoint.position - transform.position;
-			float angle = Mathf.Atan2 (patrolPointDirection.y, patrolPointDirection.x) * Mathf.Rad2Deg - 90f;
-			Quaternion q = Quaternion.AngleAxis (angle, Vector3.forward);
-			transform.rotation = Quaternion.RotateTowards (transform.rotation, q, 180f);
+			Patrolling ();
 		}
 
-		/*
-	void FixedUpdate () {
-		float z = Mathf.Atan2 ((target.transform.position.y - transform.position.y), 
-			          (target.transform.position.x - transform.position.x)) *
-		          Mathf.Rad2Deg - 90;
-		transform.eulerAngles = new Vector3 (0, 0, z);
-		rb.AddForce (gameObject.transform.up * speed);
+		if (hitPoints <= 0f) // die
+			Destroy (gameObject);
 	}
-	*/
+
+	void Chase() //Chase Player AI
+	{
+		if (Time.time > nextFire) {
+			nextFire = Time.time + fireRate;
+			Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
+		}
+
+		Vector3 targetDirection = target.position - transform.position;
+		float chaseAngle = Mathf.Atan2 (targetDirection.y, targetDirection.x) * Mathf.Rad2Deg - 90f;
+		Quaternion q2 = Quaternion.AngleAxis (chaseAngle, Vector3.forward);
+		transform.rotation = Quaternion.RotateTowards (transform.rotation, q2, 180);
+
+		transform.Translate (Vector3.up * Time.deltaTime * speed);
 	}
+
+	void Patrolling() //Enemy Patrolling AI
+	{
+		transform.Translate (Vector3.up * Time.deltaTime * speed);
+		if (Vector3.Distance (transform.position, currentPatrolPoint.position) < 0.1f) {
+			if (currentPatrolIndex + 1 < patrolPoints.Length) {
+				currentPatrolIndex++;
+			} else {
+				currentPatrolIndex = 0;
+			}
+			currentPatrolPoint = patrolPoints [currentPatrolIndex];
+		}
+		Vector3 patrolPointDirection = currentPatrolPoint.position - transform.position;
+		float angle = Mathf.Atan2 (patrolPointDirection.y, patrolPointDirection.x) * Mathf.Rad2Deg - 90f;
+		Quaternion q = Quaternion.AngleAxis (angle, Vector3.forward);
+		transform.rotation = Quaternion.RotateTowards (transform.rotation, q, 180f);
+	}
+	
 }

@@ -4,96 +4,71 @@ using UnityEngine;
 
 public class PlayerMobility : MonoBehaviour {
 
-	public float speed;
+	private float speed = 40f;
 	public GameObject shot;
 	public Transform shotSpawn;
-	public float fireRate;
-    public bool moving = false;
-    public LayerMask collision;
-    public int hitPoints = 10;
+	public Transform shotSpawn2;
+	public Transform shotSpawn3;
+	private float fireRate = 0.5f;
+	public float hitPoints = 10f;
 
-    private BoxCollider2D bc;
 	private Rigidbody2D rb;
 	private float nextFire;
 
-    Animator anim;
-
-    // Use this for initialization
-    void Start () {
-        bc = GetComponent<BoxCollider2D>();
+	// Use this for initialization
+	void Start () {
 		rb = GetComponent <Rigidbody2D> ();
-        //anim = GetComponent<Animator>();
-    }
+	}
 
 	// Update is called once per frame
 	void Update()
 	{
-        if (!Environment.instance.isDoingSetup())
-        {
-            if (Input.GetMouseButton(0) && Time.time > nextFire)
-            {
-                nextFire = Time.time + fireRate;
-                Instantiate(shot, shotSpawn.position, shotSpawn.rotation); //as GameObject;
-            }
-            movement();
-        }
-    }
+		/*Fire ball ability executiom
+		if (Input.GetMouseButton(0) && Time.time > nextFire) {
+			nextFire = Time.time + fireRate;
+			Instantiate (shot, shotSpawn.position, shotSpawn.rotation); //as GameObject;
+		}
 
+		if (Input.GetMouseButton (1) && Time.time > nextFire) { 
+			nextFire = Time.time + fireRate;
+			if (shot.transform.localScale.x < 19){
+				shot.transform.localScale += new Vector3 (2, -2, 0);
+				shot.GetComponent<FireBall> ().baseDamage += 1.5f;
+			}
+			
+		} else if (Input.GetMouseButtonUp (1)) {
+			Instantiate (shot, shotSpawn.position, shotSpawn.rotation); 
+			shot.transform.localScale = new Vector3 (5, -5, 1);
+			shot.GetComponent<FireBall> ().baseDamage = 1f;
+		} */
+
+
+		//Lightning Spell execution
+		if (Input.GetMouseButton(0) && Time.time > nextFire) {
+			nextFire = Time.time + fireRate;
+			Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
+			Instantiate (shot, shotSpawn2.position, shotSpawn2.rotation);
+			Instantiate (shot, shotSpawn3.position, shotSpawn3.rotation);
+		} 
+
+		if (hitPoints <= 0f) // die
+			Destroy (gameObject);
+	}
+		
 	void FixedUpdate () {
+		
+		var mousePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+		Quaternion rot = Quaternion.LookRotation (transform.position - mousePosition, Vector3.forward);
 
-        var mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Quaternion rot = Quaternion.LookRotation(transform.position - mousePosition, Vector3.forward);
+		transform.rotation = rot;
+		transform.eulerAngles = new Vector3 (0, 0, transform.eulerAngles.z);
+		rb.angularVelocity = 0;
 
-        //transform.rotation = rot;
-        transform.eulerAngles = new Vector3(0, 0, transform.eulerAngles.z);
-        rb.angularVelocity = 0;
+		float moveVertical = Input.GetAxis ("Vertical");
+		float moveHorizontal = Input.GetAxis ("Horizontal");
+		Vector2 movement = new Vector2 (moveHorizontal, moveVertical);
+		rb.AddForce(movement * speed) ;
 
+	}
 
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if(collision.collider.gameObject.name == "Enemy")
-            hitPoints = hitPoints - 1;
-    }
-
-    void movement()
-    {
-        if (Input.GetKey(KeyCode.W))
-        {
-            RaycastHit2D raycast = Physics2D.Raycast(transform.position + (Vector3)bc.offset, Vector2.up, (speed * Time.deltaTime), collision);
-            if (raycast.transform == null)
-                transform.Translate(Vector3.up * speed * Time.deltaTime, Space.World);
-            moving = true;
-        }
-
-        if (Input.GetKey(KeyCode.S))
-        {
-            RaycastHit2D raycast = Physics2D.Raycast(transform.position + (Vector3)bc.offset, Vector2.down, (speed * Time.deltaTime), collision);
-            if (raycast.transform == null)
-                transform.Translate(Vector3.down * speed * Time.deltaTime, Space.World);
-            moving = true;
-        }
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            RaycastHit2D raycast = Physics2D.Raycast(transform.position + (Vector3)bc.offset, Vector2.left, (speed * Time.deltaTime), collision);
-            if (raycast.transform == null)
-                transform.Translate(Vector3.left * speed * Time.deltaTime, Space.World);
-            moving = true;
-        }
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            RaycastHit2D raycast = Physics2D.Raycast(transform.position + (Vector3)bc.offset, Vector2.right, (speed * Time.deltaTime), collision);
-            if (raycast.transform == null)
-                transform.Translate(Vector3.right * speed * Time.deltaTime, Space.World);
-            moving = true;
-        }
-
-        if (Input.GetKey (KeyCode.D) != true && Input.GetKey(KeyCode.A) != true && Input.GetKey(KeyCode.S) != true && Input.GetKey(KeyCode.W) != true)
-        {
-            moving = false;
-        }
-    }
 }
