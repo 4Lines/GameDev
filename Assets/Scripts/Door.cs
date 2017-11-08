@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Door : MonoBehaviour {
 
+    public AudioClip doorSound;
+
     private bool open = false;
     private GameObject theDoor;
     private BoxCollider2D boxCollider;
@@ -24,6 +26,7 @@ public class Door : MonoBehaviour {
             {
                 animator.enabled = true;
                 animator.Play("DoorAnim", 0, 0f);
+                MusicAndSounds.instance.playSound(doorSound);
                 Invoke("letThrough", 0.5f);
             }
         }
@@ -40,6 +43,7 @@ public class Door : MonoBehaviour {
     {
         gameObject.layer = 8;
         animator.SetTrigger("DoorRev");
+        MusicAndSounds.instance.playSound(doorSound);
         open = false;
     }
 
