@@ -13,8 +13,43 @@ public class Environment : MonoBehaviour {
     public GameObject theWall;
     private GameObject LevelImage;
     private Text LevelText;
+    private bool playerMelee = false;
 
     public GameObject theDoor;
+
+    //Game now restarts after 5 seconds
+    public void gameOver()
+    {
+        doingSetup = true;
+        LevelText.color = Color.red;
+        LevelText.text = "SUBJECT BADDOG HAS BEEN SUBDUED.\nPREP THE MORGUE FOR AUTOPSY.";
+        LevelImage.SetActive(true);
+        Invoke("RestartGame", 5.0f);
+    }
+
+    //Method for restarting game
+    void RestartGame()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        Destroy(gameObject);
+        SceneManager.LoadScene(scene.name);
+    }
+
+    public void doesPlayerMelee()
+    {
+        playerMelee = true;
+        Invoke("playerMeleeOver", 1f);
+    }
+
+    private void playerMeleeOver()
+    {
+        playerMelee = false;
+    }
+
+    public bool getPlayerMelee()
+    {
+        return playerMelee;
+    }
 
     // Use this for initialization
     void Awake()
@@ -312,6 +347,7 @@ public class Environment : MonoBehaviour {
     {
         LevelImage.SetActive(false);
         doingSetup = false;
+        MusicAndSounds.instance.musicSource.Play();
     }
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
