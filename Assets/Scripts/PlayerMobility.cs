@@ -23,6 +23,7 @@ public class PlayerMobility : MonoBehaviour {
 	// Update is called once per frame
 	void Update()
 	{
+
 		/*Fire ball ability executiom
 		if (Input.GetMouseButton(0) && Time.time > nextFire) {
 			nextFire = Time.time + fireRate;
@@ -44,6 +45,7 @@ public class PlayerMobility : MonoBehaviour {
 
 
 		//Lightning Spell execution
+
 		if (Input.GetMouseButton(0) && Time.time > nextFire) {
 			nextFire = Time.time + fireRate;
 			Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
@@ -56,12 +58,26 @@ public class PlayerMobility : MonoBehaviour {
 	}
 		
 	void FixedUpdate () {
-		
+
+
 		var mousePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		Quaternion rot = Quaternion.LookRotation (transform.position - mousePosition, Vector3.forward);
 
-		transform.rotation = rot;
-		transform.eulerAngles = new Vector3 (0, 0, transform.eulerAngles.z);
+		Vector3 relativePos = mousePosition - shotSpawn.position;
+
+		shotSpawn.localPosition = new Vector3 (Mathf.Clamp(relativePos.x, 0, 0), Mathf.Clamp(relativePos.y, 0, 0) , 0);
+		shotSpawn.rotation = rot;
+		shotSpawn.eulerAngles = new Vector3 (0, 0, shotSpawn.eulerAngles.z);
+
+		shotSpawn2.localPosition = new Vector3 (Mathf.Clamp(relativePos.x, 0, 0), Mathf.Clamp(relativePos.y, 0, 0) , 0);
+		shotSpawn2.rotation = rot;
+		shotSpawn2.eulerAngles = new Vector3 (0, 0, shotSpawn.eulerAngles.z + 10);
+
+		shotSpawn3.localPosition = new Vector3 (Mathf.Clamp(relativePos.x, 0, 0), Mathf.Clamp(relativePos.y, 0, 0) , 0);
+		shotSpawn3.rotation = rot;
+		shotSpawn3.eulerAngles = new Vector3 (0, 0, shotSpawn.eulerAngles.z - 10);
+
+
 		rb.angularVelocity = 0;
 
 		float moveVertical = Input.GetAxis ("Vertical");
